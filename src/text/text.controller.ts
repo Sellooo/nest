@@ -7,7 +7,7 @@ import { UpdateTextDto } from './dto/update-text.dto';
 export class TextController {
   constructor(private readonly textService: TextService) {}
 
-  @Post('/hi')
+  @Post()
   create(@Body() createTextDto: CreateTextDto) {
     console.log(createTextDto);
     return this.textService.create(createTextDto);
