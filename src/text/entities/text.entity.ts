@@ -3,18 +3,18 @@ import { Document } from 'mongoose';
 
 export type TextDocument = Text & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Text {
   @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ default: null })
   content: string;
 
-  @Prop()
-  good: number;
+  @Prop({ default: 0 })
+  like: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   bad: number;
 }
 

@@ -3,13 +3,12 @@ import { TextService } from './text.service';
 import { CreateTextDto } from './dto/create-text.dto';
 import { UpdateTextDto } from './dto/update-text.dto';
 
-@Controller('draw')
+@Controller('text')
 export class TextController {
   constructor(private readonly textService: TextService) {}
 
   @Post()
   create(@Body() createTextDto: CreateTextDto) {
-    console.log(createTextDto);
     return this.textService.create(createTextDto);
   }
 
