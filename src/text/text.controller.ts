@@ -13,22 +13,7 @@ export class TextController {
   }
 
   @Get()
-  findAll() {
-    return this.textService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.textService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTextDto: UpdateTextDto) {
-    return this.textService.update(+id, updateTextDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.textService.remove(+id);
+  findRandom() {
+    return this.textService.findRandomText();
   }
 }
