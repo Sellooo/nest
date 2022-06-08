@@ -1,12 +1,11 @@
 export interface User {
     id: string;
     password: number;
-    test1: string;
-    test2: string;
-    status: UserStatus;
+    nickname: string;
+    phone: string;
 }
 
-export enum UserStatus {
-    PUBLIC = 'PUBLIC',
-    PRIVATE = 'PRIVATE',
-}
+// export enum UserStatus {
+//     PUBLIC = 'PUBLIC',
+//     PRIVATE = 'PRIVATE',
+// }
