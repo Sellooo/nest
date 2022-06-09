@@ -2,9 +2,18 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from "@nestjs/mongoose";
+import { TextModule } from './text/text.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost:27017/admin')],
+  imports: [
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MongoDB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
+    TextModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
