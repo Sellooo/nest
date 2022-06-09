@@ -38,7 +38,7 @@ export class TextService {
         },
       },
       { $sample: { size: 10 } },
-      { $match: { sub: { $gt: condition['minLike'], $lt: condition['maxLike'] } } },
+      { $match: { sub: { $gte: condition['minLike'], $lt: condition['maxLike'] } } },
     ]);
   }
 
