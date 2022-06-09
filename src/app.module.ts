@@ -3,10 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from "@nestjs/mongoose";
 import { TextModule } from './text/text.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://syh:1234@lvm.cx3cn5z.mongodb.net/?retryWrites=true&w=majority'),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MongoDB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
     TextModule,
   ],
   controllers: [AppController],
