@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
       useUnifiedTopology: true,
     }),
     TextModule,
-    UsersModule
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

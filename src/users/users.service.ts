@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Users, UsersDocument } from './entities/users.entity';
 import { User } from './user.model';
 
 @Injectable()
 export class UsersService {
-    private users: User[] = []; //데이터베이스 연결 전 임시
+    constructor(@InjectModel(Users.name) private usersModel: Model<UsersDocument>) { }
 
-    getAllUsers(): User[] {
-        return this.users;      //유저가져오기
-    }
-
-    createUser(createUserDto: CreateUserDto): User {
+    async createUser(createUserDto: CreateUserDto) {
         const { id, password, nickname, phone } = createUserDto;
 
         const user = {
@@ -20,7 +19,11 @@ export class UsersService {
             phone,
         }
 
-        this.users.push(user);
-        return user;
+        const createUser = new this.usersModel(user);
+        return createUser.save();
+    }
+
+    async getAllUsers() {
+        return;    //유저가져오기
     }
 }
