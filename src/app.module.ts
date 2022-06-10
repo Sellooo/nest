@@ -11,11 +11,11 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.HOST,
-      port: 8000,
+      port: 3306,
       username: process.env.USERNAME,
       password: process.env.PASSWORD,
       database: process.env.DATABASE,
-      entities: ["dist/**/*.entity{.ts,.js}"], 
+      entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
     }),
     TextModule,

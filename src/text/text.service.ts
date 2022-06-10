@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTextDto } from './dto/create-text.dto';
-import { GradeEntity } from "../grade/entities/grade.entity";
+import { GradeEntity } from '../grade/entities/grade.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TextEntity } from './entities/text.entity';
-import { Repository } from 'typeorm';
+import { LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm";
 
 @Injectable()
 export class TextService {
   constructor(
-    @InjectRepository(TextEntity) private textRepository: Repository<TextEntity>,
-    @InjectRepository(GradeEntity) private gradeRepository: Repository<GradeEntity>
+    @InjectRepository(TextEntity)
+    private textRepository: Repository<TextEntity>,
+    @InjectRepository(GradeEntity)
+    private gradeRepository: Repository<GradeEntity>,
   ) {}
 
   async create(createTextDto: CreateTextDto) {
@@ -24,11 +26,19 @@ export class TextService {
 
   async findRandomText() {
     const grade = this.getRandomGrade(1, 100);
-    const condition = await this.gradeRepository.find({
+    const condition = await this.gradeRepository.findOneOrFail({
       where: {
         name: grade,
-      }
-    })
+      },
+    });
+
+    return await this.textRepository
+      .createQueryBuilder('text')
+      .where('text.like - text.bad < :like', { like: condition.maxLike })
+      .andWhere('text.like - text.bad >= :like', { like: condition.minLike })
+      .orderBy('Rand()')
+      .limit(1)
+      .execute();
   }
 
   getRandomGrade(min, max): string {
