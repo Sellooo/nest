@@ -3,7 +3,7 @@ import { CreateTextDto } from './dto/create-text.dto';
 import { GradeEntity } from '../grade/entities/grade.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TextEntity } from './entities/text.entity';
-import { LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class TextService {
@@ -21,7 +21,7 @@ export class TextService {
     text.like = createTextDto.like;
     text.bad = createTextDto.bad;
 
-    await this.textRepository.save(text);
+    return await this.textRepository.save(text);
   }
 
   async findRandomText() {
@@ -34,8 +34,9 @@ export class TextService {
 
     return await this.textRepository
       .createQueryBuilder('text')
-      .where('text.like - text.bad < :like', { like: condition.maxLike })
-      .andWhere('text.like - text.bad >= :like', { like: condition.minLike })
+      .select('text')
+      .where('text.like - text.bad < :max', { max: condition.maxLike })
+      .andWhere('text.like - text.bad >= :min', { min: condition.minLike })
       .orderBy('Rand()')
       .limit(1)
       .execute();
