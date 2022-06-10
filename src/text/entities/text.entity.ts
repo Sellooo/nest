@@ -1,21 +1,26 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from 'mongoose';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-export type TextDocument = Text & Document;
+@Entity({ name: 'text' })
+export class TextEntity extends BaseEntity {
 
-@Schema({ timestamps: true })
-export class Text {
-  @Prop({ required: true })
+  @PrimaryGeneratedColumn()
+  text_id: number;
+
+  @Column({ type: 'varchar', length: 50, unique: true })
   title: string;
 
-  @Prop({ default: null })
+  @Column({ type: 'varchar', length: 200 })
   content: string;
 
-  @Prop({ default: 0 })
+  @Column({ type: 'varchar', default: 0 })
   like: number;
 
-  @Prop({ default: 0 })
+  @Column({ type: 'varchar', default: 0 })
   bad: number;
-}
 
-export const TextSchema = SchemaFactory.createForClass(Text);
+  @CreateDateColumn()
+  created_at: Date;
+      
+  @UpdateDateColumn()
+  updated_at: Date;
+}

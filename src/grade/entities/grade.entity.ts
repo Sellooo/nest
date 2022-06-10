@@ -1,18 +1,17 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from 'mongoose';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-export type GradeDocument = Grade & Document;
+@Entity({ name: 'grade' })
+export class GradeEntity extends BaseEntity {
 
-@Schema()
-export class Grade {
-  @Prop({ required: true })
-  textGrade: string;
+  @PrimaryGeneratedColumn()
+  grade_id: number;
 
-  @Prop({ default: 0 })
+  @Column({ type: 'varchar' })
+  name: string;
+
+  @Column()
   maxLike: number;
 
-  @Prop({ default: 0 })
+  @Column()
   minLike: number;
 }
-
-export const GradeSchema = SchemaFactory.createForClass(Grade);

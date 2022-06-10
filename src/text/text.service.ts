@@ -1,45 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTextDto } from './dto/create-text.dto';
-import { InjectModel } from "@nestjs/mongoose";
-import { TextDocument, Text } from "./entities/text.entity";
-import { Model } from "mongoose";
-import { Grade, GradeDocument } from "../grade/entities/grade.entity";
+import { GradeEntity } from "../grade/entities/grade.entity";
+import { InjectRepository } from '@nestjs/typeorm';
+import { TextEntity } from './entities/text.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TextService {
   constructor(
-    @InjectModel(Text.name) private textModel: Model<TextDocument>,
-    @InjectModel(Grade.name) private gradeModel: Model<GradeDocument>,
+    @InjectRepository(TextEntity) private textRepository: Repository<TextEntity>,
+    @InjectRepository(GradeEntity) private gradeRepository: Repository<GradeEntity>
   ) {}
 
   async create(createTextDto: CreateTextDto) {
-    const createText = new this.textModel(createTextDto);
-    return createText.save();
+    const text = new TextEntity();
+    text.title = createTextDto.title;
+    text.content = createTextDto.content;
+    text.like = createTextDto.like;
+    text.bad = createTextDto.bad;
+
+    await this.textRepository.save(text);
   }
 
   async findRandomText() {
     const grade = this.getRandomGrade(1, 100);
-    const condition = await this.gradeModel
-      .findOne({ textGrade: grade })
-      .exec();
-
-    return this.textModel.aggregate([
-      {
-        $project: {
-          _id: 0,
-          content: '$content',
-          title: '$title',
-          like: '$like',
-          bad: '$bad',
-          grade: grade,
-          sub: {
-            $subtract: ['$like', '$bad'],
-          },
-        },
-      },
-      { $sample: { size: 10 } },
-      { $match: { sub: { $gte: condition['minLike'], $lt: condition['maxLike'] } } },
-    ]);
+    const condition = await this.gradeRepository.find({
+      where: {
+        name: grade,
+      }
+    })
   }
 
   getRandomGrade(min, max): string {
