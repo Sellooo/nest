@@ -14,29 +14,29 @@ export class TextService {
     private gradeRepository: Repository<GradeEntity>,
   ) {}
 
-  async create(createTextDto: CreateTextDto) {
-    const text = new TextEntity();
-    text.title = createTextDto.title;
-    text.content = createTextDto.content;
-    text.like = createTextDto.like;
-    text.bad = createTextDto.bad;
-
-    return await this.textRepository.save(text);
+  async create({ title, content, like, bad }: CreateTextDto) {
+    return await this.textRepository.save(
+      this.textRepository.create({ title, content, like, bad }),
+    );
   }
 
-  async findRandomText() {
-    const grade = this.getRandomGrade(1, 100);
-    const condition = await this.gradeRepository.findOneOrFail({
+  getCondition(grade: string): Promise<GradeEntity> {
+    return this.gradeRepository.findOneOrFail({
       where: {
         name: grade,
       },
     });
+  }
+
+  async findRandomText(): Promise<TextEntity> {
+    const grade = this.getRandomGrade(1, 100);
+    const condition = await this.getCondition(grade);
 
     return await this.textRepository
       .createQueryBuilder('text')
       .select('text')
-      .where('text.like - text.bad < :max', { max: condition.maxLike })
-      .andWhere('text.like - text.bad >= :min', { min: condition.minLike })
+      .where('text.like - text.bad < :max', { max: condition.maxValue })
+      .andWhere('text.like - text.bad >= :min', { min: condition.minValue })
       .orderBy('Rand()')
       .limit(1)
       .execute();
