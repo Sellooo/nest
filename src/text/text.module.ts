@@ -1,16 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TextService } from './text.service';
 import { TextController } from './text.controller';
-import { MongooseModule } from "@nestjs/mongoose";
-import { TextSchema, Text } from "./entities/text.entity";
-import { Grade, GradeSchema } from "../grade/entities/grade.entity";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TextEntity } from './entities/text.entity';
+import { GradeEntity } from '.././grade/entities/grade.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Text.name, schema: TextSchema },
-      { name: Grade.name, schema: GradeSchema },
-    ]),
+    TypeOrmModule.forFeature([TextEntity, GradeEntity]),
   ],
   controllers: [TextController],
   providers: [TextService],

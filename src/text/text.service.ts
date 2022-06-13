@@ -1,45 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTextDto } from './dto/create-text.dto';
-import { InjectModel } from "@nestjs/mongoose";
-import { TextDocument, Text } from "./entities/text.entity";
-import { Model } from "mongoose";
-import { Grade, GradeDocument } from "../grade/entities/grade.entity";
+import { GradeEntity } from '../grade/entities/grade.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TextEntity } from './entities/text.entity';
+import { Repository } from "typeorm";
 
 @Injectable()
 export class TextService {
   constructor(
-    @InjectModel(Text.name) private textModel: Model<TextDocument>,
-    @InjectModel(Grade.name) private gradeModel: Model<GradeDocument>,
+    @InjectRepository(TextEntity)
+    private textRepository: Repository<TextEntity>,
+    @InjectRepository(GradeEntity)
+    private gradeRepository: Repository<GradeEntity>,
   ) {}
 
-  async create(createTextDto: CreateTextDto) {
-    const createText = new this.textModel(createTextDto);
-    return createText.save();
+  async create({ title, content, like, bad }: CreateTextDto) {
+    return await this.textRepository.save(
+      this.textRepository.create({ title, content, like, bad }),
+    );
   }
 
-  async findRandomText() {
-    const grade = this.getRandomGrade(1, 100);
-    const condition = await this.gradeModel
-      .findOne({ textGrade: grade })
-      .exec();
-
-    return this.textModel.aggregate([
-      {
-        $project: {
-          _id: 0,
-          content: '$content',
-          title: '$title',
-          like: '$like',
-          bad: '$bad',
-          grade: grade,
-          sub: {
-            $subtract: ['$like', '$bad'],
-          },
-        },
+  getCondition(grade: string): Promise<GradeEntity> {
+    return this.gradeRepository.findOneOrFail({
+      where: {
+        name: grade,
       },
-      { $sample: { size: 10 } },
-      { $match: { sub: { $gte: condition['minLike'], $lt: condition['maxLike'] } } },
-    ]);
+    });
+  }
+
+  async findRandomText(): Promise<TextEntity> {
+    const grade = this.getRandomGrade(1, 100);
+    const condition = await this.getCondition(grade);
+
+    return await this.textRepository
+      .createQueryBuilder('text')
+      .select('text')
+      .where('text.like - text.bad < :max', { max: condition.maxValue })
+      .andWhere('text.like - text.bad >= :min', { min: condition.minValue })
+      .orderBy('Rand()')
+      .limit(1)
+      .execute();
   }
 
   getRandomGrade(min, max): string {

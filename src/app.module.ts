@@ -1,17 +1,23 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from "@nestjs/mongoose";
-import { UsersModule } from './users/users.module';
 import { TextModule } from './text/text.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MongoDB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.HOST,
+      port: 3306,
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: false,
     }),
     TextModule,
     UsersModule,
