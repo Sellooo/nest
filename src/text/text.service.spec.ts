@@ -33,8 +33,25 @@ describe('TextService', () => {
   });
 
   describe('findRandomText', () => {
+    const mockGrade = {
+      'grade_id': 2,
+      'name': 'Epic',
+      'maxValue': 20,
+      'minValue': 10,
+    }
+
+    const mockText = {
+      "text_text_id": 4,
+      "text_title": "test3",
+      "text_content": "hello2",
+      "text_like": 8,
+      "text_bad": 2,
+      "text_created_at": "2022-06-10T12:26:44.196Z",
+      "text_updated_at": "2022-06-10T12:26:44.196Z"
+    }
+
     beforeEach(async () => {
-      await gradeRepository.findOneOrFail.mockResolvedValue('Legend');
+      gradeRepository.findOneOrFail.mockResolvedValue(mockGrade);
       await service.findRandomText();
     });
 
@@ -42,10 +59,28 @@ describe('TextService', () => {
       await gradeRepository.findOneOrFail.mockResolvedValue(undefined);
 
       try {
-        await service.getCondition('Legend');
+        await service.getCondition('Epic');
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
+    });
+
+    it('should return Grade', async() => {
+      const result = await service.getCondition('Epic');
+      expect(result).toEqual(mockGrade);
+    })
+
+    it('should call createQueryBuilder if grade exists', async() => {
+      expect(textRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+    })
+
+    it('should return result', async() => {
+      jest
+        .spyOn(textRepository.createQueryBuilder(), 'execute')
+        .mockResolvedValue(mockText);
+      const result = await service.findRandomText();
+
+      expect(result).toEqual(mockText);
     })
   })
 });

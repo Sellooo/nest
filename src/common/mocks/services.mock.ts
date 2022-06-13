@@ -4,15 +4,13 @@ export const mockRepository = () => ({
   save: jest.fn(),
   create: jest.fn(),
   delete: jest.fn(),
-  createQueryBuilder: jest.fn(() => ({
+  createQueryBuilder: jest.fn().mockReturnValue({
     select: jest.fn().mockReturnThis(),
     orderBy: jest.fn().mockReturnThis(),
     limit: jest.fn().mockReturnThis(),
     where: jest.fn().mockReturnThis(),
     andWhere: jest.fn().mockReturnThis(),
-    setParameter: jest.fn().mockReturnThis(),
-    leftJoinAndSelect: jest.fn().mockReturnThis(),
-    execution: jest.fn().mockReturnThis(),
+    execute: jest.fn().mockReturnThis(),
     getOne: jest.fn().mockReturnThis(),
-  })),
+  }),
 });
