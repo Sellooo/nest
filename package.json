@@ -28,6 +28,8 @@
     "@nestjs/mongoose": "^9.1.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.1.2",
+    "bcryptjs": "^2.4.3",
+    "class-validator": "^0.13.2",
     "joi": "^17.6.0",
     "mongoose": "^6.3.5",
     "mysql2": "^2.3.3",
