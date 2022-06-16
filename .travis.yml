@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - 16
+
+before_install:
+  - npm update
+
+branches:
+  only:
+    - master
+  
+notifications:
+  email:
+    recipients:
+      - dbsgur6896@gmail.com
