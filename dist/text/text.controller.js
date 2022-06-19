@@ -23,6 +23,9 @@ let TextController = class TextController {
     create(createTextDto) {
         return this.textService.create(createTextDto);
     }
+    hello() {
+        return 'deploy test';
+    }
     findRandom() {
         return this.textService.findRandomText();
     }
@@ -34,6 +37,12 @@ __decorate([
     __metadata("design:paramtypes", [create_text_dto_1.CreateTextDto]),
     __metadata("design:returntype", void 0)
 ], TextController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)('/deploy'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], TextController.prototype, "hello", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
