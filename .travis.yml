@@ -31,6 +31,7 @@ deploy:
     local_dir: deploy
     wait_until_deployed: true
     on:
+      repo: Sellooo/nest
       branch: deploy
 
   - provider: codedeploy
@@ -47,6 +48,7 @@ deploy:
     region: ap-northeast-2
     wait-until-deployed: true
     on:
+      repo: Sellooo/nest
       branch: deploy
 
   
