@@ -11,11 +11,12 @@ branches:
 
 before_deploy:
   - npm run build
-  - zip -r lvm *
+  - zip -r app *
   - mkdir -p pre-deploy
-  - mv lvm.zip pre-deploy/lvm.zip
+  - mv app.zip pre-deploy/app.zip
   - mv appspec.yml pre-deploy/appspec.yml
   - mv deploy.sh pre-deploy/deploy.sh
+  - zip -r lvm ./pre-deploy
   - mkdir -p deploy
   - mv lvm.zip deploy/lvm.zip
 
