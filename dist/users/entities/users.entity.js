@@ -9,29 +9,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersSchema = exports.Users = void 0;
-const mongoose_1 = require("@nestjs/mongoose");
-let Users = class Users {
+exports.UserEntity = void 0;
+const typeorm_1 = require("typeorm");
+let UserEntity = class UserEntity extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, mongoose_1.Prop)(),
-    __metadata("design:type", String)
-], Users.prototype, "id", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Users.prototype, "password", void 0);
+], UserEntity.prototype, "user_id", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: null }),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
-], Users.prototype, "nickname", void 0);
+], UserEntity.prototype, "email", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: null }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Users.prototype, "phone", void 0);
-Users = __decorate([
-    (0, mongoose_1.Schema)()
-], Users);
-exports.Users = Users;
-exports.UsersSchema = mongoose_1.SchemaFactory.createForClass(Users);
+], UserEntity.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], UserEntity.prototype, "point", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: null }),
+    __metadata("design:type", String)
+], UserEntity.prototype, "nickname", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: null }),
+    __metadata("design:type", String)
+], UserEntity.prototype, "phone", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], UserEntity.prototype, "created_at", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], UserEntity.prototype, "updated_at", void 0);
+UserEntity = __decorate([
+    (0, typeorm_1.Entity)({ name: 'users' }),
+    (0, typeorm_1.Unique)(['user_id'])
+], UserEntity);
+exports.UserEntity = UserEntity;
 //# sourceMappingURL=users.entity.js.map

@@ -2,7 +2,7 @@ import { IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
     @IsString()
-    user_id: string;
+    email: string;
 
     @IsString()
     password: string;

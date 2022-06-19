@@ -14,32 +14,50 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-const mongoose_1 = require("@nestjs/mongoose");
-const mongoose_2 = require("mongoose");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
 const users_entity_1 = require("./entities/users.entity");
+const bcrypt = require("bcryptjs");
+const common_2 = require("@nestjs/common");
 let UsersService = class UsersService {
-    constructor(usersModel) {
-        this.usersModel = usersModel;
+    constructor(userRepository) {
+        this.userRepository = userRepository;
     }
     async createUser(createUserDto) {
-        const { id, password, nickname, phone } = createUserDto;
-        const user = {
-            id,
-            password,
-            nickname,
-            phone,
-        };
-        const createUser = new this.usersModel(user);
-        return createUser.save();
+        const { email, password, nickname, phone } = createUserDto;
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = this.userRepository.create({ email, password: hashedPassword, nickname, phone });
+        try {
+            await this.userRepository.save(user);
+        }
+        catch (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
+                throw new common_2.ConflictException('Email이 이미 있습니다.');
+            }
+            else {
+                throw new common_2.InternalServerErrorException();
+            }
+        }
     }
     async getAllUsers() {
-        return;
+        return this.userRepository.find();
+    }
+    async signIn(createUserDto) {
+        const { email, password } = createUserDto;
+        const user = await this.userRepository.findOneBy({ email });
+        if (user && (await bcrypt.compare(password, user.password))) {
+            return '로그인 성공';
+        }
+        else {
+            throw new common_1.UnauthorizedException('로그인 실패');
+        }
     }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(users_entity_1.Users.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.UserEntity)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

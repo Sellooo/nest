@@ -23,6 +23,12 @@ let UsersController = class UsersController {
     createUser(createUserDto) {
         return this.usersService.createUser(createUserDto);
     }
+    getAllUsers() {
+        return this.usersService.getAllUsers();
+    }
+    signIn(createUserDto) {
+        return this.usersService.signIn(createUserDto);
+    }
 };
 __decorate([
     (0, common_1.Post)('/createUser'),
@@ -31,6 +37,19 @@ __decorate([
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "createUser", null);
+__decorate([
+    (0, common_1.Get)('/'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getAllUsers", null);
+__decorate([
+    (0, common_1.Post)('/signin'),
+    __param(0, (0, common_1.Body)(common_1.ValidationPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "signIn", null);
 UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
