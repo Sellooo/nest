@@ -6,10 +6,7 @@ cd $REPOSITORY
 echo "env 파일 가져오기"
 sudo cp ../.env ./
 
-echo "배포"
-sudo pm2 start ecosystem.config.js
-
 echo "배포 상태 확인"
-sudo pm2 list
+pm2 list
 
 echo "배포 완료"

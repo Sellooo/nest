@@ -14,7 +14,7 @@ export class TextController {
 
   @Get('/deploy')
   hello() {
-    return 'deploy test';
+    return 'deploy test2';
   }
 
   @Get()

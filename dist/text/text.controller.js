@@ -24,7 +24,7 @@ let TextController = class TextController {
         return this.textService.create(createTextDto);
     }
     hello() {
-        return 'deploy test';
+        return 'deploy test2';
     }
     findRandom() {
         return this.textService.findRandomText();
