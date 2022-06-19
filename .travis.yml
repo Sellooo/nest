@@ -10,6 +10,7 @@ branches:
     - deploy
 
 before_deploy:
+  - rm -rf node_modules
   - zip -r app *
   - mkdir -p pre-deploy
   - mv app.zip pre-deploy/app.zip
