@@ -7,7 +7,48 @@ before_install:
 
 branches:
   only:
-    - master
+    - deploy
+
+before_deploy:
+  - npm run build
+  - zip -r lvm *
+  - mkdir -p pre-deploy
+  - mv lvm.zip pre-deploy/lvm.zip
+  - mv appspec.yml pre-deploy/appspec.yml
+  - mv deploy.sh pre-deploy/deploy.sh
+  - mkdir -p deploy
+  - mv lvm.zip deploy/lvm.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+
+    bucket: lvm-s3
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir: deploy
+    wait_until_deployed: true
+    on:
+      branch: deploy
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+
+    bucket: lvm-s3
+    key: lvm.zip
+
+    bundle_type: zip
+    application: lvm
+
+    deployment_group: lvm-deploy-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      branch: deploy
+
   
 notifications:
   email:

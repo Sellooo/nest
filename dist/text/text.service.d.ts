@@ -7,6 +7,7 @@ export declare class TextService {
     private gradeRepository;
     constructor(textRepository: Repository<TextEntity>, gradeRepository: Repository<GradeEntity>);
     create({ title, content, like, bad }: CreateTextDto): Promise<TextEntity>;
-    findRandomText(): Promise<any>;
+    getCondition(grade: string): Promise<GradeEntity>;
+    findRandomText(): Promise<TextEntity>;
     getRandomGrade(min: any, max: any): string;
 }
