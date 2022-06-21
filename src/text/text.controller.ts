@@ -12,6 +12,11 @@ export class TextController {
     return this.textService.create(createTextDto);
   }
 
+  @Get('/deploy')
+  hello() {
+    return 'deploy test2';
+  }
+
   @Get()
   findRandom() {
     return this.textService.findRandomText();

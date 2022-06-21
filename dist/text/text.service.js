@@ -26,13 +26,16 @@ let TextService = class TextService {
     async create({ title, content, like, bad }) {
         return await this.textRepository.save(this.textRepository.create({ title, content, like, bad }));
     }
-    async findRandomText() {
-        const grade = this.getRandomGrade(1, 100);
-        const condition = await this.gradeRepository.findOneOrFail({
+    getCondition(grade) {
+        return this.gradeRepository.findOneOrFail({
             where: {
                 name: grade,
             },
         });
+    }
+    async findRandomText() {
+        const grade = this.getRandomGrade(1, 100);
+        const condition = await this.getCondition(grade);
         return await this.textRepository
             .createQueryBuilder('text')
             .select('text')

@@ -7,7 +7,46 @@ before_install:
 
 branches:
   only:
-    - master
+    - deploy
+
+before_deploy:
+  - rm -rf node_modules
+  - zip -r lvm *
+  - mkdir -p deploy
+  - mv lvm.zip deploy/lvm.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+
+    bucket: lvm-s3
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir: deploy
+    wait_until_deployed: true
+    on:
+      repo: Sellooo/nest
+      branch: deploy
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+
+    bucket: lvm-s3
+    key: lvm.zip
+
+    bundle_type: zip
+    application: lvm
+
+    deployment_group: lvm-deploy-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: Sellooo/nest
+      branch: deploy
+
   
 notifications:
   email:
