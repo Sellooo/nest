@@ -3,7 +3,7 @@ export declare class UserEntity extends BaseEntity {
     user_id: number;
     email: string;
     password: string;
-    point: number;
+    coin: number;
     nickname: string;
     phone: string;
     created_at: Date;

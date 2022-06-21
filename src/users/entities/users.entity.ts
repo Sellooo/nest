@@ -13,7 +13,7 @@ export class UserEntity extends BaseEntity {
   password: string;
 
   @Column({ default: 0 })
-  point: number;
+  coin: number;
 
   @Column({ default: null })
   nickname: string;

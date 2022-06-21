@@ -28,7 +28,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
-], UserEntity.prototype, "point", void 0);
+], UserEntity.prototype, "coin", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: null }),
     __metadata("design:type", String)
